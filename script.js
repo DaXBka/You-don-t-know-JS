@@ -1,22 +1,19 @@
-const button = document.querySelector('#btn');
-const input = document.querySelector('input[type="text"]');
-const square = document.querySelector('#square');
+const input = document.querySelector('#input');
+const p = document.querySelector('p');
 
-const circle = square.querySelector('#circle');
-const circleButton = circle.querySelector('#e_btn');
+const setText = () => {
+    p.textContent = input.value;
+};
 
-const rangeInput = document.querySelector('input[type="range"]');
+function debounce(f, t) {
+    return function (args) {
+        let previousCall = this.lastCall;
+        this.lastCall = Date.now();
+        if (previousCall && this.lastCall - previousCall <= t) {
+            clearTimeout(this.lastCallTimer);
+        }
+        this.lastCallTimer = setTimeout(() => f(args), t);
+    };
+}
 
-// 1
-button.addEventListener('click', () => {
-    square.style.backgroundColor = input.value;
-})
-
-// 2
-circleButton.style.display = 'none';
-
-// 3
-rangeInput.addEventListener('input', (event) => {
-    circle.style.width = event.target.value + '%';
-    circle.style.height = event.target.value + '%';
-})
+input.addEventListener('input', debounce(setText, 300));
