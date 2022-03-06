@@ -1,19 +1,32 @@
-const input = document.querySelector('#input');
-const p = document.querySelector('p');
-
-const setText = () => {
-    p.textContent = input.value;
+const getData = ({ url: url, data: data }) => {
+    return fetch(url, {
+        method: 'GET',
+        body: data,
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
+        .then(response => response.json())
+        .catch(error => console.log(error));
+    // .then(data => console.log(data));
 };
 
-function debounce(f, t) {
-    return function (args) {
-        let previousCall = this.lastCall;
-        this.lastCall = Date.now();
-        if (previousCall && this.lastCall - previousCall <= t) {
-            clearTimeout(this.lastCallTimer);
-        }
-        this.lastCallTimer = setTimeout(() => f(args), t);
-    };
-}
+const sendData = ({ url: url, data: data }) => {
+    fetch(url, {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
+        .then(response => response.json())
+        .catch(error => console.log(error));
+};
 
-input.addEventListener('input', debounce(setText, 300));
+getData({ url: 'db.json' }).then(data =>
+    sendData({
+        url: 'https://jsonplaceholder.typicode.com/posts',
+        data: JSON.stringify(data),
+        method: 'POST',
+    })
+);
